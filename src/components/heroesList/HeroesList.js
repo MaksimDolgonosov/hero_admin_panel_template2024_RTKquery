@@ -1,6 +1,6 @@
 import { useHttp } from '../../hooks/http.hook';
 import { createSelector } from 'reselect';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectAll as selectAllHeroes } from '../../reducers/heroesSlice';
 import { heroDeleted } from '../../reducers/heroesSlice';
@@ -18,24 +18,38 @@ import { useGetHeroesQuery } from '../../api/apiSlice';
 const HeroesList = () => {
 
     const { data: heroes = [], error, isLoading } = useGetHeroesQuery();
-    console.log(heroes);
-    const filteredHeroesSelector = createSelector(
-        // (state) => console.log(state),
-        (state) => state.filters.activeFilter,
-        // (state) => state.heroes.heroes,
-        selectAllHeroes,
-        (filter, heroes) => {
-            if (filter === "all") {
-                return heroes
-            } else {
-                return heroes.filter(hero => hero.element === filter)
-            }
-        }
-    )
 
-    const filteredHeroes = useSelector(filteredHeroesSelector)
-    const heroesLoadingStatus = useSelector(state => state.heroes.heroesLoadingStatus);
+    const activeFilter = useSelector(state => state.filters.activeFilter);
+
+
+
+    // const filteredHeroesSelector = createSelector(
+    //     // (state) => console.log(state),
+    //     (state) => state.filters.activeFilter,
+    //     // (state) => state.heroes.heroes,
+    //     selectAllHeroes,
+    //     (filter, heroes) => {
+    //         if (filter === "all") {
+    //             return heroes
+    //         } else {
+    //             return heroes.filter(hero => hero.element === filter)
+    //         }
+    //     }
+    // )
+
+    // const filteredHeroes = useSelector(filteredHeroesSelector)
+    // const heroesLoadingStatus = useSelector(state => state.heroes.heroesLoadingStatus);
     //const { activeFilter } = useSelector(state => state.filters);
+    const filteredHeroes = useMemo(() => {
+        const filteredHeroes = heroes.slice();
+        if (activeFilter === "all") {
+            return filteredHeroes
+        } else {
+            return filteredHeroes.filter(hero => hero.element === activeFilter)
+        }
+    }, [heroes, activeFilter])
+
+
 
     //console.log(activeFilter);
     const dispatch = useDispatch();
@@ -73,7 +87,7 @@ const HeroesList = () => {
         })
     }
     // const filteredHeroes = activeFilter === "all" ? heroes : heroes.filter(hero => hero.element === activeFilter);
-    const elements = renderHeroesList(heroes);
+    const elements = renderHeroesList(filteredHeroes);
     return (
         <ul>
             {elements}
