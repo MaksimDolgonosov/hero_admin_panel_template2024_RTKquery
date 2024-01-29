@@ -8,7 +8,7 @@ import HeroesListItem from "../heroesListItem/HeroesListItem";
 import Spinner from '../spinner/Spinner';
 
 import { fetchHeroes } from '../../reducers/heroesSlice';
-import { useGetHeroesQuery } from '../../api/apiSlice';
+import { useGetHeroesQuery, useDeleteHeroMutation } from '../../api/apiSlice';
 
 // Задача для этого компонента:
 // При клике на "крестик" идет удаление персонажа из общего состояния
@@ -22,7 +22,7 @@ const HeroesList = () => {
     const activeFilter = useSelector(state => state.filters.activeFilter);
 
 
-
+    const [deleteHero] = useDeleteHeroMutation();
     // const filteredHeroesSelector = createSelector(
     //     // (state) => console.log(state),
     //     (state) => state.filters.activeFilter,
@@ -55,20 +55,21 @@ const HeroesList = () => {
     const dispatch = useDispatch();
     const { request } = useHttp();
 
-    useEffect(() => {
-        dispatch(fetchHeroes())
-        // dispatch(heroesFetching());
-        // request("http://localhost:3001/heroes")
-        //     .then(data => dispatch(heroesFetched(data)))
-        //     .catch(() => dispatch(heroesFetchingError))
+    // useEffect(() => {
+    //     dispatch(fetchHeroes())
+    //     // dispatch(heroesFetching());
+    //     // request("http://localhost:3001/heroes")
+    //     //     .then(data => dispatch(heroesFetched(data)))
+    //     //     .catch(() => dispatch(heroesFetchingError))
 
-        // eslint-disable-next-line
-    }, []);
+    //     // eslint-disable-next-line
+    // }, []);
 
 
     const onDelete = (id) => {
-        dispatch(heroDeleted(id));
-        request("http://localhost:3001/heroes/" + id, "DELETE");
+        // dispatch(heroDeleted(id));
+        // request("http://localhost:3001/heroes/" + id, "DELETE");
+        deleteHero(id);
     }
 
 

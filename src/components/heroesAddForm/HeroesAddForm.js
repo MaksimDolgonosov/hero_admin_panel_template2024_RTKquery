@@ -9,6 +9,7 @@ import { heroAdded } from "../../reducers/heroesSlice";
 import { useHttp } from "../../hooks/http.hook";
 import { useEffect } from "react";
 import store from '../../store';
+import { useAddHeroMutation } from "../../api/apiSlice";
 // Задача для этого компонента:
 // Реализовать создание нового героя с введенными данными. Он должен попадать
 // в общее состояние и отображаться в списке + фильтроваться
@@ -24,6 +25,8 @@ const HeroesAddForm = () => {
     //const filters = useSelector(selectAllFilters) ;
     const filters = selectAllFilters(store.getState())
     const { request } = useHttp();
+
+    const [updatePost, {isLoading}] = useAddHeroMutation();
     useEffect(() => {
         // request("http://localhost:3001/filters")
         //     .then(filters => dispatch(fetchFilters()))
@@ -45,7 +48,8 @@ const HeroesAddForm = () => {
         const heroID = uuidv4();
         const newHerro = { ...hero, id: heroID };
         dispatch(heroAdded(newHerro));
-        request("http://localhost:3001/heroes", "POST", JSON.stringify(newHerro));
+        updatePost(newHerro).unwrap()
+       // request("http://localhost:3001/heroes", "POST", JSON.stringify(newHerro));
         setHero({
             id: "",
             name: "",
