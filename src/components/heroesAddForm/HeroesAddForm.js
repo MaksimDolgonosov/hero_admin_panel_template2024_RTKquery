@@ -10,6 +10,7 @@ import { useHttp } from "../../hooks/http.hook";
 import { useEffect } from "react";
 import store from '../../store';
 import { useAddHeroMutation } from "../../api/apiSlice";
+import { useGetFiltersQuery } from "../../api/apiFilters";
 // Задача для этого компонента:
 // Реализовать создание нового героя с введенными данными. Он должен попадать
 // в общее состояние и отображаться в списке + фильтроваться
@@ -23,17 +24,19 @@ import { useAddHeroMutation } from "../../api/apiSlice";
 const HeroesAddForm = () => {
     //const { filters } = useSelector(state => state.filters);
     //const filters = useSelector(selectAllFilters) ;
-    const filters = selectAllFilters(store.getState())
-    const { request } = useHttp();
 
-    const [updatePost, {isLoading}] = useAddHeroMutation();
-    useEffect(() => {
-        // request("http://localhost:3001/filters")
-        //     .then(filters => dispatch(fetchFilters()))
-        //     .catch(error => console.log(error))
-        dispatch(fetchFilters());
-        // eslint-disable-next-line
-    }, [])
+    const { data: filters = [] } = useGetFiltersQuery();
+    //const filters = selectAllFilters(store.getState())
+    //const { request } = useHttp();
+
+    const [updatePost, { isLoading }] = useAddHeroMutation();
+    // useEffect(() => {
+    //     // request("http://localhost:3001/filters")
+    //     //     .then(filters => dispatch(fetchFilters()))
+    //     //     .catch(error => console.log(error))
+    //     dispatch(fetchFilters());
+    //     // eslint-disable-next-line
+    // }, [])
 
     const dispatch = useDispatch();
     const [hero, setHero] = useState({
@@ -49,7 +52,7 @@ const HeroesAddForm = () => {
         const newHerro = { ...hero, id: heroID };
         dispatch(heroAdded(newHerro));
         updatePost(newHerro).unwrap()
-       // request("http://localhost:3001/heroes", "POST", JSON.stringify(newHerro));
+        // request("http://localhost:3001/heroes", "POST", JSON.stringify(newHerro));
         setHero({
             id: "",
             name: "",

@@ -9,10 +9,13 @@ import { useSelector, useDispatch } from "react-redux";
 //import { activeFiltersAdded } from "../../actions";
 import { activeFiltersAdded, selectAll } from "../../reducers/filtersSlice";
 import store from "../../store";
+import { useGetFiltersQuery } from "../../api/apiFilters";
+
 const HeroesFilters = () => {
-    const {  activeFilter } = useSelector(state => state.filters);
+    const { activeFilter } = useSelector(state => state.filters);
     //const filters = useSelector(selectAll);
-    const filters = selectAll(store.getState());
+    const { data: filters = [] } = useGetFiltersQuery();
+    //const filters = selectAll(store.getState());
     const dispatch = useDispatch();
 
     const onActive = (filter) => {
@@ -20,7 +23,6 @@ const HeroesFilters = () => {
     }
 
     const renderFilters = (filters) => {
-
         return filters.map(filter => {
             switch (filter.name) {
                 case "fire":
@@ -30,13 +32,13 @@ const HeroesFilters = () => {
                         onClick={() => onActive(filter.name)}
                         className={"btn btn-danger" + (activeFilter === filter.name ? " active" : "")}>Огонь</button>
                 case "water":
-                    return <button data-element={filter.name} key={filter.id} onClick={() => onActive(filter.name)} className={"btn btn-primary"+ (activeFilter === filter.name ? " active" : "")}>Вода</button>
+                    return <button data-element={filter.name} key={filter.id} onClick={() => onActive(filter.name)} className={"btn btn-primary" + (activeFilter === filter.name ? " active" : "")}>Вода</button>
                 case "wind":
-                    return <button data-element={filter.name} key={filter.id} onClick={() => onActive(filter.name)} className={"btn btn-success"+ (activeFilter === filter.name ? " active" : "")}>Ветер</button>
+                    return <button data-element={filter.name} key={filter.id} onClick={() => onActive(filter.name)} className={"btn btn-success" + (activeFilter === filter.name ? " active" : "")}>Ветер</button>
                 case "earth":
-                    return <button data-element={filter.name} key={filter.id} onClick={() => onActive(filter.name)} className={"btn btn-secondary"+ (activeFilter === filter.name ? " active" : "")}>Земля</button>
+                    return <button data-element={filter.name} key={filter.id} onClick={() => onActive(filter.name)} className={"btn btn-secondary" + (activeFilter === filter.name ? " active" : "")}>Земля</button>
                 default:
-                    return <button data-element={filter.name} key={filter.id} onClick={() => onActive(filter.name)} className={"btn btn-outline-dark"+ (activeFilter === filter.name ? " active" : "")}>Все</button>
+                    return <button data-element={filter.name} key={filter.id} onClick={() => onActive(filter.name)} className={"btn btn-outline-dark" + (activeFilter === filter.name ? " active" : "")}>Все</button>
             }
 
         })

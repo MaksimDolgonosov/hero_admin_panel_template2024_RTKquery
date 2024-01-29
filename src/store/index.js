@@ -6,6 +6,7 @@ import heroes from '../reducers/heroesSlice';
 import filters from '../reducers/filtersSlice';
 
 import { apiSlice } from '../api/apiSlice';
+import { apiFilters } from '../api/apiFilters';
 
 const stringMiddleware = () => (next) => (action) => {
     if (typeof action === 'string') {
@@ -24,8 +25,9 @@ const stringMiddleware = () => (next) => (action) => {
     reducer: { 
         heroes, 
         filters, 
-        [apiSlice.reducerPath]: apiSlice.reducer },
-    middleware: getDefaultMiddleware => getDefaultMiddleware().concat(stringMiddleware, apiSlice.middleware),
+        [apiSlice.reducerPath]: apiSlice.reducer,
+        [apiFilters.reducerPath]: apiFilters.reducer,},
+    middleware: getDefaultMiddleware => getDefaultMiddleware().concat(stringMiddleware, apiSlice.middleware, apiFilters.middleware),
     devTools: process.env.NODE_ENV !== "production",
 
 })
